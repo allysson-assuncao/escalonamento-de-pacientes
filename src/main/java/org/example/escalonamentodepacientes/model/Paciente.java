@@ -9,7 +9,6 @@ import org.example.escalonamentodepacientes.enums.StatusPaciente;
 /**
  * Representa um Paciente (Processo) no sistema.
  */
-@Builder
 @Getter
 @Setter
 @ToString
@@ -47,7 +46,7 @@ public class Paciente {
         if(this.status != StatusPaciente.EXECUTANDO){
             this.tempoEsperaTotal++;
         }
-        if(tempoExecucaoTotal == this.tempoDuracao){
+        if(tempoExecucaoTotal - this.tempoEsperaTotal == this.tempoDuracao){
             this.concluirPaciente();
         }
     }

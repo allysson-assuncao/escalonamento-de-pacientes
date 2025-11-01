@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.example.escalonamentodepacientes.enums.StatusMedico;
 
 /**
  * Representa um Médico (Núcleo de CPU).
@@ -15,5 +16,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Medico {
+
+    private int id;
+    private StatusMedico status;
+
 
 }
