@@ -21,4 +21,19 @@ public class Medico {
     private StatusMedico status;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
