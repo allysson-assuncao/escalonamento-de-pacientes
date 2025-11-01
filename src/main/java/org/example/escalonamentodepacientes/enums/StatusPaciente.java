@@ -8,5 +8,6 @@ public enum StatusPaciente {
     NOVO,
     PRONTO,
     EXECUTANDO,
+    ESPERANDO,
     CONCLUIDO
 }

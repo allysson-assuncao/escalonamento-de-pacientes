@@ -1,10 +1,18 @@
 package org.example.escalonamentodepacientes.model;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.example.escalonamentodepacientes.enums.StatusPaciente;
 
 /**
  * Representa um Paciente (Processo) no sistema.
  */
+@Builder
+@Getter
+@Setter
+@ToString
 public class Paciente {
 
     // --- Dados de Entrada (Configuração) ---
@@ -32,6 +40,28 @@ public class Paciente {
         this.tempoRestante = this.tempoDuracao;
         this.tempoEsperaTotal = 0;
         this.tempoExecucaoTotal = 0;
+    }
+
+    public void atualizaPaciente(){
+        this.tempoExecucaoTotal++;
+        if(this.status != StatusPaciente.EXECUTANDO){
+            this.tempoEsperaTotal++;
+        }
+        if(tempoExecucaoTotal == this.tempoDuracao){
+            this.concluirPaciente();
+        }
+    }
+
+    private void concluirPaciente(){
+        this.status = StatusPaciente.CONCLUIDO;
+    }
+
+    public void iniciaExecucaoPaciente(){
+        this.status = StatusPaciente.EXECUTANDO;
+    }
+
+    public void interrompeExecucaoPaciente(){
+        this.status = StatusPaciente.ESPERANDO;
     }
 
 }
