@@ -63,4 +63,38 @@ public class Paciente {
         this.status = StatusPaciente.ESPERANDO;
     }
 
+    /**
+     * Incrementa o tempo de espera do paciente.
+     * Chamado a cada "tick" do relógio enquanto ele está na fila de PRONTO.
+     */
+    public void incrementarTempoEspera() {
+        if (this.status == StatusPaciente.PRONTO) {
+            this.tempoEsperaTotal++;
+        }
+    }
+
+    /**
+     * Processa um "tick" de atendimento médico.
+     * @return true se o paciente concluiu o atendimento, false caso contrário.
+     */
+    public boolean executarTick() {
+        if (this.status == StatusPaciente.EXECUTANDO) {
+            this.tempoRestante--;
+            if (this.tempoRestante <= 0) {
+                this.status = StatusPaciente.CONCLUIDO;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Define o tempo de execução total (Turnaround)
+     * quando o paciente é concluído.
+     */
+    public void finalizarTurnaround(int tempoAtual) {
+        // Turnaround = Tempo de Conclusão - Tempo de Chegada
+        this.tempoExecucaoTotal = (tempoAtual + 1) - this.tempoChegada;
+    }
+
 }

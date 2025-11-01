@@ -1,8 +1,9 @@
-package org.example.escalonamentodepacientes.controller;
+package org.example.escalonamentodepacientes.gui;
 
 import org.example.escalonamentodepacientes.enums.AlgoritmoEscalonamento;
 import org.example.escalonamentodepacientes.model.ConfiguracaoSimulacao;
 import org.example.escalonamentodepacientes.model.Paciente;
+import org.example.escalonamentodepacientes.simulacao.Simulador;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,7 @@ import java.util.List;
  * Tela principal para configuração da simulação.
  * Coleta os dados de entrada e inicia o Simulador.
  */
-public class TelaSimulacao extends JFrame {
+public class TelaConfiguracao extends JFrame {
 
     private JComboBox<AlgoritmoEscalonamento> comboAlgoritmo;
     private JComboBox<String> comboCargaPacientes;
@@ -23,9 +24,9 @@ public class TelaSimulacao extends JFrame {
     private JRadioButton radioAleatorio;
     private JRadioButton radioPredefinido;
 
-    public TelaSimulacao() {
+    public TelaConfiguracao() {
         setTitle("Simulador de Hospital Digital - Configuração");
-        setSize(500, 350);
+        setSize(1000, 750);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new GridLayout(7, 2, 10, 10));
@@ -69,6 +70,10 @@ public class TelaSimulacao extends JFrame {
         add(btnIniciar);
     }
 
+    /**
+     * Ação do botão "Iniciar Simulação".
+     * Coleta os dados, cria a Configuração e chama o Simulador.
+     */
     private void iniciarSimulacao(ActionEvent e) {
         // 1. Coletar dados da GUI
         AlgoritmoEscalonamento algoritmo = (AlgoritmoEscalonamento) comboAlgoritmo.getSelectedItem();
@@ -85,18 +90,29 @@ public class TelaSimulacao extends JFrame {
         }
 
         // 2. Criar Configuração
-        if(algoritmo == AlgoritmoEscalonamento.ROUND_ROBIN){
-            ConfiguracaoSimulacao config = new ConfiguracaoSimulacao(algoritmo, numMedicos, pacientes, quantum);
-        }else{
-            ConfiguracaoSimulacao config = new ConfiguracaoSimulacao(algoritmo, numMedicos, pacientes);
-        }
+        ConfiguracaoSimulacao config = new ConfiguracaoSimulacao(algoritmo, numMedicos, pacientes, quantum);
 
-        System.out.println("Iniciando simulação com " + numMedicos + " médicos e algoritmo " + algoritmo);
-        System.out.println("Pacientes:");
-        pacientes.forEach(System.out::println);
+        // 3. Criar e exibir a tela de Simulação
+        TelaSimulacao telaSimulacao = new TelaSimulacao(numMedicos);
+        telaSimulacao.setVisible(true);
 
+        // 4. Instanciar o simulador, passando a nova tela
+        Simulador simulador = new Simulador(config, telaSimulacao);
 
+        // 5. Executa o simulador em background (swingworker)
+        // Evita o travamento da GUI
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                simulador.executarSimulacao();
+                return null;
+            }
+        };
 
+        worker.execute();
+
+        // Desabilita a tela enquanto um teste já está em execução
+        this.setVisible(false);
     }
 
 }

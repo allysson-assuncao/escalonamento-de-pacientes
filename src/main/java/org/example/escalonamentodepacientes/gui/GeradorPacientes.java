@@ -1,4 +1,4 @@
-package org.example.escalonamentodepacientes.controller;
+package org.example.escalonamentodepacientes.gui;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +28,7 @@ public class GeradorPacientes {
             int id = i + 1;
             int tempoChegada = rand.nextInt(quantidade * 2);
             int tempoDuracao = rand.nextInt(0,11); // Duração de 1 a 10
-            int prioridade = rand.nextInt(5) + 1; // Prioridade de 1 a 5
+            int prioridade = rand.nextInt(-20,21); // Prioridade de -20 a 20
             lista.add(new Paciente(id, tempoChegada, tempoDuracao, prioridade));
         }
         return lista;
@@ -36,7 +36,7 @@ public class GeradorPacientes {
 
     /**
      * Retorna uma lista pré-definida de pacientes com base em um cenário.
-     * @param nomeCenario O cenário desejado (ex: "SJF_Ideal", "RR_Ideal")
+     * @param nomeCenario O cenário desejado
      */
     public static List<Paciente> getListaPredefinida(String nomeCenario) {
         List<Paciente> lista = new ArrayList<>();
@@ -60,7 +60,7 @@ public class GeradorPacientes {
             lista.add(new Paciente(1, 0, 10, 2)); // Longo, chega primeiro
             lista.add(new Paciente(2, 2, 2, 1));  // Curto, chega e deve preeptar P1
         } else {
-            // Padrão (Cenário 1 do TP)
+            // Cenário Padrão
             lista.add(new Paciente(1, 0, 7, 1)); // Crítico
             lista.add(new Paciente(2, 1, 3, 3));
             lista.add(new Paciente(3, 2, 5, 5)); // Baixa prioridade

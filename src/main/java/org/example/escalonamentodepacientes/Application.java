@@ -1,8 +1,8 @@
 package org.example.escalonamentodepacientes;
 
-import org.example.escalonamentodepacientes.controller.TelaSimulacao;
-import org.springframework.boot.SpringApplication;
+import org.example.escalonamentodepacientes.gui.TelaConfiguracao;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import javax.swing.*;
 
@@ -10,10 +10,12 @@ import javax.swing.*;
 public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        new SpringApplicationBuilder(Application.class)
+                .headless(false)
+                .run(args);
 
         SwingUtilities.invokeLater(() -> {
-            TelaSimulacao tela = new TelaSimulacao();
+            TelaConfiguracao tela = new TelaConfiguracao();
             tela.setVisible(true);
         });
 
