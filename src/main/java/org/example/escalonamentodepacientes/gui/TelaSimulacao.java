@@ -24,7 +24,7 @@ public class TelaSimulacao extends JFrame implements IAtualizadorVisual {
 
     public TelaSimulacao(int numeroMedicos) {
         setTitle("Simulação em Andamento");
-        setSize(600, 400);
+        setSize(1200, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));

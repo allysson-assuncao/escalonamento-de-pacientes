@@ -26,7 +26,11 @@ public class Medico {
         this.tempoOcupado = 0;
     }
 
-    public boolean estaOcioso(){return this.status  == StatusMedico.OCIOSO;};
+    public boolean estaOcioso() {
+        return this.status == StatusMedico.OCIOSO;
+    }
+
+    ;
 
     /**
      * Atribui um paciente a este médico, iniciando o atendimento.
@@ -39,6 +43,7 @@ public class Medico {
 
     /**
      * Libera o médico, tornando-o ocioso.
+     *
      * @return O paciente que acabou de ser atendido.
      */
     public Paciente liberarMedico() {
@@ -54,12 +59,10 @@ public class Medico {
      * Processa o trabalho do médico neste "tick" do relógio.
      */
     public void executaTickConsulta() {
-        if (this.status == StatusMedico.OCUPADO) {
-            this.tempoOcupado++;
+        this.tempoOcupado++;
 
-            // Lógica de incremento interna ao paciente
-            this.pacienteAtual.executarTick();
-        }
+        // Lógica de incremento interna ao paciente
+        this.pacienteAtual.executarTick();
     }
 
 }

@@ -2,7 +2,6 @@ package org.example.escalonamentodepacientes.escalonadores;
 
 import org.example.escalonamentodepacientes.model.Paciente;
 
-import java.util.Comparator;
 import java.util.Queue;
 
 /**

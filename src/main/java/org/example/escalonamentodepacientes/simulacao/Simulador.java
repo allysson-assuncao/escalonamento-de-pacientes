@@ -53,7 +53,8 @@ public class Simulador {
 
         // Copia a lista para não modificar a original
         this.pacientesNovos = new ArrayList<>(config.getPacientes());
-        this.pacientesNovos.sort(Comparator.comparingInt(Paciente::getTempoChegada));
+        // Depois precisamos ordenar a lista de pacientes por ordem de chegada (isso é útil para todos os algoritmos)
+        // this.pacientesNovos.sort(...);
 
         this.filaDeProntos = new LinkedList<>();
         this.pacientesConcluidos = new ArrayList<>();
@@ -105,12 +106,12 @@ public class Simulador {
                 visualizador.atualizarVisualizacao(tempoAtual, medicos, filaDeProntos);
             }
 
-            // --- FASE 6: AVANÇAR O RELÓGIO ---
+            // --- FASE 6: Avança o Relógio ---
             this.tempoAtual++;
 
             // Pequeno delay para permitir a visualização
             try {
-                Thread.sleep(1000); // 1s por "tick"
+                Thread.sleep(1000); // 1s por "tick" do relógio global
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -142,7 +143,7 @@ public class Simulador {
     }
 
     private void verificarPreempcaoSRTF(Paciente pacienteNovo) {
-        // Tenta encontrar um médico que esteja atendendo um paciente maior do que o recem chegado
+        // Tenta encontrar um médico que esteja atendendo um paciente com duração maior do que o recem chegado
         // Deve realizar a substituição em caso verdadeiro
     }
 
@@ -181,7 +182,7 @@ public class Simulador {
                     filaDeProntos.remove(proximo);
                     medico.atenderPaciente(proximo);
 
-                    // Reseta o contador do Quantum para este atendimento
+                    // Reseta o contador do Quantum para este atendimento (RR)
                     if (config.getAlgoritmo() == AlgoritmoEscalonamento.ROUND_ROBIN) {
                         this.quantumAtual = config.getQuantum();
                     }

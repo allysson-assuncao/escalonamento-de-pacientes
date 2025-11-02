@@ -1,6 +1,5 @@
 package org.example.escalonamentodepacientes.model;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -41,28 +40,6 @@ public class Paciente {
         this.tempoExecucaoTotal = 0;
     }
 
-    public void atualizaPaciente(){
-        this.tempoExecucaoTotal++;
-        if(this.status != StatusPaciente.EXECUTANDO){
-            this.tempoEsperaTotal++;
-        }
-        if(tempoExecucaoTotal - this.tempoEsperaTotal == this.tempoDuracao){
-            this.concluirPaciente();
-        }
-    }
-
-    private void concluirPaciente(){
-        this.status = StatusPaciente.CONCLUIDO;
-    }
-
-    public void iniciaExecucaoPaciente(){
-        this.status = StatusPaciente.EXECUTANDO;
-    }
-
-    public void interrompeExecucaoPaciente(){
-        this.status = StatusPaciente.ESPERANDO;
-    }
-
     /**
      * Incrementa o tempo de espera do paciente.
      * Chamado a cada "tick" do relógio enquanto ele está na fila de PRONTO.
@@ -75,17 +52,14 @@ public class Paciente {
 
     /**
      * Processa um "tick" de atendimento médico.
-     * @return true se o paciente concluiu o atendimento, false caso contrário.
      */
-    public boolean executarTick() {
+    public void executarTick() {
         if (this.status == StatusPaciente.EXECUTANDO) {
             this.tempoRestante--;
             if (this.tempoRestante <= 0) {
                 this.status = StatusPaciente.CONCLUIDO;
-                return true;
             }
         }
-        return false;
     }
 
     /**
