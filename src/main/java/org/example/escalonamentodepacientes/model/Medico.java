@@ -30,8 +30,6 @@ public class Medico {
         return this.status == StatusMedico.OCIOSO;
     }
 
-    ;
-
     /**
      * Atribui um paciente a este médico, iniciando o atendimento.
      */
