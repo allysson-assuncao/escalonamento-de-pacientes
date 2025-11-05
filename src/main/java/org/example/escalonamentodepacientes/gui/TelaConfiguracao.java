@@ -43,7 +43,7 @@ public class TelaConfiguracao extends JFrame {
 
         // 3. Quantum (para RR)
         add(new JLabel("Quantum (para Round-Robin):"));
-        spinnerQuantum = new JSpinner(new SpinnerNumberModel(3, 1, 10, 1));
+        spinnerQuantum = new JSpinner(new SpinnerNumberModel(2, 1, 10, 1));
         add(spinnerQuantum);
 
         // 4. Seleção de Pacientes (Aleatório)
@@ -54,7 +54,7 @@ public class TelaConfiguracao extends JFrame {
 
         // 5. Seleção de Pacientes (Pré-definido)
         radioPredefinido = new JRadioButton("Carga Pré-definida:");
-        comboCargaPacientes = new JComboBox<>(new String[]{"CenarioSJF", "CenarioPrioridade", "CenarioSRTF"});
+        comboCargaPacientes = new JComboBox<>(new String[]{"CenarioSlides", "CenarioSJF", "CenarioPrioridade", "CenarioSRTF"});
         add(radioPredefinido);
         add(comboCargaPacientes);
 

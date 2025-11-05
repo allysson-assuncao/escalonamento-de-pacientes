@@ -28,7 +28,7 @@ public class GeradorPacientes {
             int id = i + 1;
             int tempoChegada = rand.nextInt(quantidade * 2);
             int tempoDuracao = rand.nextInt(0,11); // Duração de 1 a 10
-            int prioridade = rand.nextInt(-20,21); // Prioridade de -20 a 20
+            int prioridade = rand.nextInt(-10,11); // Prioridade de -10 a 10
             lista.add(new Paciente(id, tempoChegada, tempoDuracao, prioridade));
         }
         return lista;
@@ -41,29 +41,43 @@ public class GeradorPacientes {
     public static List<Paciente> getListaPredefinida(String nomeCenario) {
         List<Paciente> lista = new ArrayList<>();
 
-        if ("CenarioSJF".equals(nomeCenario)) {
-            // Todos chegam juntos, mas com durações diferentes.
-            // Ideal para destacar o funcionamento do SJF.
-            lista.add(new Paciente(1, 0, 8, 3));
-            lista.add(new Paciente(2, 0, 3, 2));
-            lista.add(new Paciente(3, 0, 5, 1));
-            lista.add(new Paciente(4, 0, 2, 2));
-            lista.add(new Paciente(5, 0, 2, 3));
-            lista.add(new Paciente(6, 0, 4, 1));
-        } else if ("CenarioPrioridade".equals(nomeCenario)) {
-            // Chegadas diferentes, mas prioridades claras.
-            lista.add(new Paciente(1, 0, 5, 3)); // Chega primeiro, baixa prio
-            lista.add(new Paciente(2, 1, 3, 1)); // Chega depois, alta prio
-            lista.add(new Paciente(3, 2, 4, 2));
-        } else if ("CenarioSRTF".equals(nomeCenario)) {
-            // Ideal para ver preempção
-            lista.add(new Paciente(1, 0, 10, 2)); // Longo, chega primeiro
-            lista.add(new Paciente(2, 2, 2, 1));  // Curto, chega e deve preeptar P1
-        } else {
-            // Cenário Padrão
-            lista.add(new Paciente(1, 0, 7, 1)); // Crítico
-            lista.add(new Paciente(2, 1, 3, 3));
-            lista.add(new Paciente(3, 2, 5, 5)); // Baixa prioridade
+        switch (nomeCenario) {
+            case "CenarioSlides" -> {
+                // Usando os mesmos dados dos exemplos dos slides da aula 07
+                // Adaptação das prioridade para decrescente
+                lista.add(new Paciente(1, 0, 5, 4));
+                lista.add(new Paciente(2, 0, 2, 3));
+                lista.add(new Paciente(3, 1, 4, 5));
+                lista.add(new Paciente(4, 3, 1, 2));
+                lista.add(new Paciente(5, 5, 2, 1));
+            }
+            case "CenarioSJF" -> {
+                // Todos chegam juntos, mas com durações diferentes.
+                // Ideal para destacar o funcionamento do SJF.
+                lista.add(new Paciente(1, 0, 8, 3));
+                lista.add(new Paciente(2, 0, 3, 2));
+                lista.add(new Paciente(3, 0, 5, 1));
+                lista.add(new Paciente(4, 0, 2, 2));
+                lista.add(new Paciente(5, 0, 2, 3));
+                lista.add(new Paciente(6, 0, 4, 1));
+            }
+            case "CenarioPrioridade" -> {
+                // Chegadas diferentes, mas prioridades claras.
+                lista.add(new Paciente(1, 0, 5, 3)); // Chega primeiro, baixa prio
+                lista.add(new Paciente(2, 1, 3, 1)); // Chega depois, alta prio
+                lista.add(new Paciente(3, 2, 4, 2));
+            }
+            case "CenarioSRTF" -> {
+                // Ideal para ver preempção
+                lista.add(new Paciente(1, 0, 10, 2)); // Longo, chega primeiro
+                lista.add(new Paciente(2, 2, 2, 1));  // Curto, chega e deve preeptar P1
+            }
+            case null, default -> {
+                // Cenário Padrão
+                lista.add(new Paciente(1, 0, 7, 1)); // Crítico
+                lista.add(new Paciente(2, 1, 3, 3));
+                lista.add(new Paciente(3, 2, 5, 5)); // Baixa prioridade
+            }
         }
 
         return lista;
