@@ -6,8 +6,6 @@ import lombok.ToString;
 import org.example.escalonamentodepacientes.enums.AlgoritmoEscalonamento;
 import java.util.List;
 
-
-
 /**
  * Armazena todos os parâmetros de entrada definidos pelo usuário.
  */

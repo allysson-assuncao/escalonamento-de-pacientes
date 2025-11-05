@@ -36,7 +36,6 @@ public class Simulador {
 
     private int tempoAtual;
     private int totalTrocasContexto;
-    private int quantumAtual; // Contador para Round-Robin
 
     public Simulador(ConfiguracaoSimulacao config, IAtualizadorVisual visualizador) {
         this.config = config;
@@ -64,19 +63,13 @@ public class Simulador {
      * Cria a instância do algoritmo de escalonamento selecionado.
      */
     private IEscalonador criarEscalonador(AlgoritmoEscalonamento alg) {
-        switch (alg) {
-            case ROUND_ROBIN:
-                this.quantumAtual = config.getQuantum();
-                return new EscalonadorRoundRobin(config.getQuantum());
-            case SJF:
-                return new EscalonadorSJF();
-            case SRTF:
-                // return new EscalonadorSRTF();
-            case PRIORIDADE_NP:
-                // return new EscalonadorPrioridade();
-            default:
-                throw new IllegalArgumentException("Algoritmo desconhecido: " + alg);
-        }
+        return switch (alg) {
+            case ROUND_ROBIN -> new EscalonadorRoundRobin();
+            case SJF -> new EscalonadorSJF();
+            // case SJF -> new EscalonadorSRTF();
+            // case SJF -> new EscalonadorPrioridade();
+            default -> throw new IllegalArgumentException("Algoritmo desconhecido: " + alg);
+        };
     }
 
     /**
@@ -142,6 +135,7 @@ public class Simulador {
         }
     }
 
+    // TODO: Implementar e efetivar o funcionamento desse método
     private void verificarPreempcaoSRTF(Paciente pacienteNovo) {
         // Tenta encontrar um médico que esteja atendendo um paciente com duração maior do que o recem chegado
         // Deve realizar a substituição em caso verdadeiro
@@ -153,7 +147,7 @@ public class Simulador {
                 continue; // Próximo médico
             }
 
-            // Médico trabalha
+            // Médico trabalha (RR: incrementa o contador interno de quantum)
             medico.executaTickConsulta();
             Paciente paciente = medico.getPacienteAtual();
 
@@ -163,10 +157,23 @@ public class Simulador {
                 pacientesConcluidos.add(paciente);
                 medico.liberarMedico();
 
-                // 2. Verifica preempção por Quantum (Round-Robin)
+                // 2. Se não terminou, verifica preempção por Quantum (RR)
             } else if (config.getAlgoritmo() == AlgoritmoEscalonamento.ROUND_ROBIN) {
-                // Caso o quantum do paciente atual tenha acabado seguir com a lógica do RR
-                // Trocar o paciente atendido e adicionar o anterior novamente a lista caso não tenha sido concluido
+                int quantumDefinido = config.getQuantum();
+
+                // Verifica se o atendimento atual do médico estourou o quantum
+                if (medico.getTempoNoAtendimentoAtual() >= quantumDefinido) {
+
+                    System.out.println("[T=" + tempoAtual + "] PREEMPÇÃO RR: " + paciente + " (Quantum " + quantumDefinido + " estourou)");
+
+                    Paciente pacientePreemptado = medico.liberarMedico();
+
+                    // Coloca o paciente de volta no fim da fila de prontos
+                    pacientePreemptado.setStatus(StatusPaciente.PRONTO);
+                    filaDeProntos.add(pacientePreemptado);
+
+                    totalTrocasContexto++;
+                }
             }
         }
     }
@@ -181,11 +188,6 @@ public class Simulador {
                     // Remove da fila e atribui ao médico
                     filaDeProntos.remove(proximo);
                     medico.atenderPaciente(proximo);
-
-                    // Reseta o contador do Quantum para este atendimento (RR)
-                    if (config.getAlgoritmo() == AlgoritmoEscalonamento.ROUND_ROBIN) {
-                        this.quantumAtual = config.getQuantum();
-                    }
 
                     // Cada novo atendimento corresponde a uma troca de contexo para aquele "Núcleo"
                     totalTrocasContexto++;

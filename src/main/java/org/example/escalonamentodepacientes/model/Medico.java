@@ -19,11 +19,13 @@ public class Medico {
     private StatusMedico status;
     private Paciente pacienteAtual;
     private int tempoOcupado;
+    private int tempoNoAtendimentoAtual;
 
     public Medico(int id) {
         this.id = id;
         this.status = StatusMedico.OCIOSO;
         this.tempoOcupado = 0;
+        this.tempoNoAtendimentoAtual = 0;
     }
 
     public boolean estaOcioso() {
@@ -37,6 +39,7 @@ public class Medico {
         this.pacienteAtual = paciente;
         this.status = StatusMedico.OCUPADO;
         paciente.setStatus(StatusPaciente.EXECUTANDO);
+        this.tempoNoAtendimentoAtual = 0;
     }
 
     /**
@@ -48,6 +51,7 @@ public class Medico {
         Paciente pacienteConcluido = this.pacienteAtual;
         this.pacienteAtual = null;
         this.status = StatusMedico.OCIOSO;
+        this.tempoNoAtendimentoAtual = 0;
 
         // Retorno usado quando o paciente precisa ser movido (preempção)
         return pacienteConcluido;
@@ -58,6 +62,7 @@ public class Medico {
      */
     public void executaTickConsulta() {
         this.tempoOcupado++;
+        this.tempoNoAtendimentoAtual++;
 
         // Lógica de incremento interna ao paciente
         this.pacienteAtual.executarTick();
