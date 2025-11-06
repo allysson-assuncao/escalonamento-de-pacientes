@@ -52,8 +52,9 @@ public class Simulador {
 
         // Copia a lista para não modificar a original
         this.pacientesNovos = new ArrayList<>(config.getPacientes());
-        // Depois precisamos ordenar a lista de pacientes por ordem de chegada (isso é útil para todos os algoritmos)
-        // this.pacientesNovos.sort(...);
+
+        // Ordena a lista inicial de pacientes por tempo de chagada, processo últil para todos os algoritmos
+        this.pacientesNovos.sort(Comparator.comparingInt(Paciente::getTempoChegada));
 
         this.filaDeProntos = new LinkedList<>();
         this.pacientesConcluidos = new ArrayList<>();
