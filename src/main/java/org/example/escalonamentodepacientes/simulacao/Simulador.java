@@ -5,10 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.example.escalonamentodepacientes.enums.AlgoritmoEscalonamento;
 import org.example.escalonamentodepacientes.enums.StatusPaciente;
-import org.example.escalonamentodepacientes.escalonadores.EscalonadorRoundRobin;
-import org.example.escalonamentodepacientes.escalonadores.EscalonadorSJF;
-import org.example.escalonamentodepacientes.escalonadores.IAtualizadorVisual;
-import org.example.escalonamentodepacientes.escalonadores.IEscalonador;
+import org.example.escalonamentodepacientes.escalonadores.*;
 import org.example.escalonamentodepacientes.model.ConfiguracaoSimulacao;
 import org.example.escalonamentodepacientes.model.Medico;
 import org.example.escalonamentodepacientes.model.Paciente;
@@ -68,7 +65,7 @@ public class Simulador {
             case ROUND_ROBIN -> new EscalonadorRoundRobin();
             case SJF -> new EscalonadorSJF();
             // case SJF -> new EscalonadorSRTF();
-            // case SJF -> new EscalonadorPrioridade();
+            case PRIORIDADE_NP -> new EscalonadorPrioridade();
             default -> throw new IllegalArgumentException("Algoritmo desconhecido: " + alg);
         };
     }
