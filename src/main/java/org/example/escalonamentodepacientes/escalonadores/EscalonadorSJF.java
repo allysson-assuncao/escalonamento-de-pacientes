@@ -7,7 +7,6 @@ import java.util.Queue;
 /**
  * Implementa o Shortest Job First (SJF) Não-Preemptivo.
  */
-
 public class EscalonadorSJF implements IEscalonador {
     @Override
     public Paciente selecionarProximo(Queue<Paciente> filaDeProntos, int tempoAtual) {
