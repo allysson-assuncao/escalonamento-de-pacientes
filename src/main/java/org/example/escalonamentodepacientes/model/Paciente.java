@@ -78,4 +78,13 @@ public class Paciente {
                 ", prioridade=" + prioridade +
                 '}';
     }
+
+
+    public int getTempoDuracao() {
+        return tempoDuracao;
+    }
+
+    public int getPrioridade() {
+        return prioridade;
+    }
 }

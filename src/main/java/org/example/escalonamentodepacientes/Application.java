@@ -18,7 +18,5 @@ public class Application {
             TelaConfiguracao tela = new TelaConfiguracao();
             tela.setVisible(true);
         });
-
     }
-
 }
