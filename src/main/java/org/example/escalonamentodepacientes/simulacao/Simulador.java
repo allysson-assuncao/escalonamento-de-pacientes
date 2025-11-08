@@ -64,7 +64,7 @@ public class Simulador {
         return switch (alg) {
             case ROUND_ROBIN -> new EscalonadorRoundRobin();
             case SJF -> new EscalonadorSJF();
-            // case SJF -> new EscalonadorSRTF();
+            case SRTF -> new EscalonadorSRTF();
             case PRIORIDADE_NP -> new EscalonadorPrioridade();
             default -> throw new IllegalArgumentException("Algoritmo desconhecido: " + alg);
         };

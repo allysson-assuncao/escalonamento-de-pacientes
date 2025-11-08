@@ -79,12 +79,4 @@ public class Paciente {
                 '}';
     }
 
-
-    public int getTempoDuracao() {
-        return tempoDuracao;
-    }
-
-    public int getPrioridade() {
-        return prioridade;
-    }
 }
