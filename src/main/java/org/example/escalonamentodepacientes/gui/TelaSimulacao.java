@@ -21,6 +21,7 @@ public class TelaSimulacao extends JFrame implements IAtualizadorVisual {
     private JTextArea areaFilaProntos;
     private JTextArea areaResultados;
     private List<JLabel> labelsStatusMedicos; // Labels para status de cada médico
+    private PainelGantt painelGantt;
 
     public TelaSimulacao(int numeroMedicos) {
         setTitle("Simulação em Andamento");
@@ -42,6 +43,14 @@ public class TelaSimulacao extends JFrame implements IAtualizadorVisual {
 
         add(painelTopo, BorderLayout.NORTH);
 
+        // --- Painel Gantt ---
+        painelGantt = new PainelGantt();
+        JScrollPane scrollGantt = new JScrollPane(painelGantt);
+        scrollGantt.setBorder(BorderFactory.createTitledBorder("Gráfico de Gantt (Evolução dos Pacientes)"));
+        scrollGantt.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollGantt.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        add(scrollGantt, BorderLayout.CENTER);
+
         // --- Painel Central (Médicos) ---
         JPanel painelMedicos = new JPanel(new GridLayout(numeroMedicos, 1));
         painelMedicos.setBorder(BorderFactory.createTitledBorder("Médicos (Núcleos)"));
@@ -51,7 +60,7 @@ public class TelaSimulacao extends JFrame implements IAtualizadorVisual {
             labelsStatusMedicos.add(label);
             painelMedicos.add(label);
         }
-        add(new JScrollPane(painelMedicos), BorderLayout.CENTER);
+        add(new JScrollPane(painelMedicos), BorderLayout.WEST);
 
         // --- Painel Inferior (Resultados) ---
         areaResultados = new JTextArea("Resultados Finais:\n(Aguardando conclusão...)");
@@ -90,6 +99,8 @@ public class TelaSimulacao extends JFrame implements IAtualizadorVisual {
                 }
                 label.setText("Médico " + medico.getId() + ": " + status);
             }
+
+            painelGantt.registrarTick(tempoAtual, medicos, filaDeProntos);
         });
     }
 
