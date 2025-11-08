@@ -2,7 +2,6 @@ package org.example.escalonamentodepacientes.gui;
 
 import org.example.escalonamentodepacientes.model.Medico;
 import org.example.escalonamentodepacientes.model.Paciente;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -41,7 +40,7 @@ public class PainelGantt extends JPanel {
             historicoPacientes.putIfAbsent(p, new ArrayList<>());
             tempoChegada.putIfAbsent(p, tempo);
 
-            Color cor = Color.WHITE; // Padrão: aguardando atendimento
+            Color cor = Color.WHITE; //  aguardando atendimento
 
             for (Medico m : medicos) {
                 if (m.getPacienteAtual() == p) {
@@ -60,6 +59,24 @@ public class PainelGantt extends JPanel {
             cores.add(cor);
         }
 
+
+        // A lógica de redimensionamento foi movida de paintComponent para cá.
+
+        // 1. Calculamos a altura necessária
+        int numPacientes = tempoChegada.size(); // Total de pacientes únicos
+        int alturaLegenda = coresMedicos.isEmpty() ? 0 : 60; // Espaço para a legenda
+        int novaAltura = MARGEM_SUPERIOR + (numPacientes * (ALTURA_BARRA + 5)) + alturaLegenda + 100; // 100 de margem
+
+        // 2. Calculamos a largura necessária
+        int novaLargura = MARGEM_ESQUERDA + this.tempoAtual * LARGURA_TICK + 200; // 200 de margem
+
+        // 3. Informamos o novo tamanho
+        setPreferredSize(new Dimension(novaLargura, novaAltura));
+
+        // 4. AVISAMOS O SCROLLPANE PARA ATUALIZAR AS BARRAS
+        revalidate();
+
+        // 5. Mandamos redesenhar
         repaint();
     }
 
@@ -111,7 +128,10 @@ public class PainelGantt extends JPanel {
 
         // Desenha o eixo X com marcação de tempo (ticks)
         g2.setColor(Color.BLACK);
-        g2.drawLine(MARGEM_ESQUERDA, MARGEM_SUPERIOR - 10, MARGEM_ESQUERDA + tempoAtual * LARGURA_TICK, MARGEM_SUPERIOR - 10);
+
+        // Garante que a linha do eixo X vá até o final do gráfico
+        int larguraEixoX = Math.max(tempoAtual * LARGURA_TICK, getWidth() - MARGEM_ESQUERDA - 20);
+        g2.drawLine(MARGEM_ESQUERDA, MARGEM_SUPERIOR - 10, MARGEM_ESQUERDA + larguraEixoX, MARGEM_SUPERIOR - 10);
 
         for (int t = 0; t <= tempoAtual; t += 5) {
             int x = MARGEM_ESQUERDA + t * LARGURA_TICK;
@@ -141,11 +161,6 @@ public class PainelGantt extends JPanel {
                 g2.drawString("Médico " + medico.getId(), legendaX + 30, legendaY - 3);
                 legendaX += 120;
             }
-
-            y += 60;
         }
-
-        // Ajusta o tamanho do painel conforme o conteúdo
-        setPreferredSize(new Dimension(MARGEM_ESQUERDA + tempoAtual * LARGURA_TICK + 200, y + 100));
     }
 }
