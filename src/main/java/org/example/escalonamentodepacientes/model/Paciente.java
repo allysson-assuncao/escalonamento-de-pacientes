@@ -2,7 +2,6 @@ package org.example.escalonamentodepacientes.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.example.escalonamentodepacientes.enums.StatusPaciente;
 
 /**
@@ -10,7 +9,6 @@ import org.example.escalonamentodepacientes.enums.StatusPaciente;
  */
 @Getter
 @Setter
-@ToString
 public class Paciente {
 
     // --- Dados de Entrada (Configuração) ---
@@ -71,4 +69,13 @@ public class Paciente {
         this.tempoExecucaoTotal = (tempoAtual + 1) - this.tempoChegada;
     }
 
+    @Override
+    public String toString() {
+        return "Paciente{" +
+                "id=" + id +
+                ", tempoChegada=" + tempoChegada +
+                ", tempoDuracao=" + tempoDuracao +
+                ", prioridade=" + prioridade +
+                '}';
+    }
 }
