@@ -78,6 +78,7 @@ public class Simulador {
 
         // O loop continua enquanto houver pacientes novos, na fila ou sendo executados
         while (pacientesConcluidos.size() < config.getPacientes().size()) {
+            System.out.println("Executando fluxo principal, tempo: " + this.tempoAtual);
 
             // --- FASE 1: Chegada dos pacientes ---
             processarChegadas();
@@ -108,6 +109,8 @@ public class Simulador {
             }
         }
 
+        // Verificar isso
+        this.tempoAtual--;
         System.out.println("Simulação concluída no tempo: " + (this.tempoAtual));
         calcularMetricasFinais();
     }

@@ -165,7 +165,7 @@ public class TelaConfiguracao extends JFrame {
         grupoPacientes.add(radioAleatorio);
 
         radioPredefinido = new JRadioButton("Carga Pré-definida:");
-        comboCargaPacientes = new JComboBox<>(new String[]{"CenarioSJF", "CenarioPrioridade", "CenarioSRTF"});
+        comboCargaPacientes = new JComboBox<>(new String[]{"CenarioSlides", "CenarioSJF", "CenarioPrioridade", "CenarioSRTF"});
         grupoPacientes.add(radioPredefinido);
 
         radioManual = new JRadioButton("Adicionar Manualmente:");
