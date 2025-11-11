@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.example.escalonamentodepacientes.enums.AlgoritmoEscalonamento;
+import org.example.escalonamentodepacientes.enums.CenarioSimulacao;
 import org.example.escalonamentodepacientes.enums.StatusPaciente;
 import org.example.escalonamentodepacientes.escalonadores.*;
 import org.example.escalonamentodepacientes.model.ConfiguracaoSimulacao;
@@ -11,6 +12,7 @@ import org.example.escalonamentodepacientes.model.Medico;
 import org.example.escalonamentodepacientes.model.Paciente;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * O fluxo central da simulação. Gerencia o "Relógio Global",
@@ -25,18 +27,22 @@ public class Simulador {
     private ConfiguracaoSimulacao config;
     private IEscalonador escalonador;
     private IAtualizadorVisual visualizador; // Interface para atualizar o Gantt
+    private final CenarioSimulacao cenario;
 
-    private List<Medico> medicos;
-    private List<Paciente> pacientesNovos; // Pacientes que ainda não chegaram
-    private Queue<Paciente> filaDeProntos;
-    private List<Paciente> pacientesConcluidos;
+    private final List<Medico> medicos;
+    private final List<Paciente> pacientesNovos; // Pacientes que ainda não chegaram
+    private final Queue<Paciente> filaDeProntos;
+    private final List<Paciente> pacientesConcluidos;
+
+    private int proximoIdRuntime; // Para IDs únicos na adição de pacientes em tempo de execução
 
     private int tempoAtual;
     private int totalTrocasContexto;
 
-    public Simulador(ConfiguracaoSimulacao config, IAtualizadorVisual visualizador) {
+    public Simulador(ConfiguracaoSimulacao config, IAtualizadorVisual visualizador, CenarioSimulacao cenario) {
         this.config = config;
         this.visualizador = visualizador;
+        this.cenario = cenario;
         this.tempoAtual = 0;
         this.totalTrocasContexto = 0;
 
@@ -48,13 +54,17 @@ public class Simulador {
         }
 
         // Copia a lista para não modificar a original
-        this.pacientesNovos = new ArrayList<>(config.getPacientes());
+        // CopyOnWriteArrayList para permitir adições durante a iteração
+        this.pacientesNovos = new CopyOnWriteArrayList<>(config.getPacientes());
 
         // Ordena a lista inicial de pacientes por tempo de chagada, processo últil para todos os algoritmos
         this.pacientesNovos.sort(Comparator.comparingInt(Paciente::getTempoChegada));
 
-        this.filaDeProntos = new LinkedList<>();
-        this.pacientesConcluidos = new ArrayList<>();
+        this.filaDeProntos = new java.util.concurrent.ConcurrentLinkedQueue<>();
+        this.pacientesConcluidos = new CopyOnWriteArrayList<>();
+
+        // Define um ID inicial para pacientes runtime
+        this.proximoIdRuntime = 1000 + config.getPacientes().size();
     }
 
     /**
@@ -71,13 +81,33 @@ public class Simulador {
     }
 
     /**
+     * Método público e thread-safe para adicionar pacientes.
+     * Chamado pelos botões da TelaSimulacao.
+     */
+    public synchronized void adicionarPacienteRuntime(Paciente paciente) {
+        // Define os dados do paciente no momento da adição
+        paciente.setId(proximoIdRuntime++);
+        paciente.setTempoChegada(this.tempoAtual + 1); // Chega no próximo tick
+
+        // Adicionar a esta lista é thread-safe
+        this.pacientesNovos.add(paciente);
+
+        System.out.println("[T=" + tempoAtual + "] NOVO PACIENTE RUNTIME: " + paciente + " chegará em T=" + paciente.getTempoChegada());
+    }
+
+    /**
      * Executa o loop principal da simulação (Relógio Global).
      */
     public void executarSimulacao() {
         System.out.println("Simulação iniciada...");
 
-        // O loop continua enquanto houver pacientes novos, na fila ou sendo executados
-        while (pacientesConcluidos.size() < config.getPacientes().size()) {
+        // O loop continua enquanto houver pacientes novos, na fila ou sendo executados (considerando os possivelmente adicionados em tempo real)
+        // ou continua enquanto houver pacientes na fila, médicos ocupados, ou pacientes pra chegar
+        while (pacientesConcluidos.size() < config.getPacientes().size() + (proximoIdRuntime - (1000 + config.getPacientes().size()))
+                || !filaDeProntos.isEmpty()
+                || medicos.stream().anyMatch(m -> !m.estaOcioso())
+                || !pacientesNovos.isEmpty())
+        {
             System.out.println("Executando fluxo principal, tempo: " + this.tempoAtual);
 
             // --- FASE 1: Chegada dos pacientes ---
@@ -109,7 +139,7 @@ public class Simulador {
             }
         }
 
-        // Verificar isso
+        // Reverte o último incremento, que não foi processado
         this.tempoAtual--;
         System.out.println("Simulação concluída no tempo: " + (this.tempoAtual));
         calcularMetricasFinais();
@@ -131,6 +161,7 @@ public class Simulador {
                 }*/
             } else if (p.getTempoChegada() > tempoAtual) {
                 // Como a lista está ordenada, podemos parar de procurar
+                // Será que causa problema para os adicionados posteriormente?
                 break;
             }
         }
