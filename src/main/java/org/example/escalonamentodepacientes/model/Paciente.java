@@ -66,7 +66,7 @@ public class Paciente {
      */
     public void finalizarTurnaround(int tempoAtual) {
         // Turnaround = Tempo de Conclusão - Tempo de Chegada
-        this.tempoExecucaoTotal = (tempoAtual + 1) - this.tempoChegada;
+        this.tempoExecucaoTotal = tempoAtual - this.tempoChegada;
     }
 
     @Override

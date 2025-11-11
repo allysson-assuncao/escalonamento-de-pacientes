@@ -106,8 +106,7 @@ public class Simulador {
         while (pacientesConcluidos.size() < config.getPacientes().size() + (proximoIdRuntime - (1000 + config.getPacientes().size()))
                 || !filaDeProntos.isEmpty()
                 || medicos.stream().anyMatch(m -> !m.estaOcioso())
-                || !pacientesNovos.isEmpty())
-        {
+                || !pacientesNovos.isEmpty()) {
             System.out.println("Executando fluxo principal, tempo: " + this.tempoAtual);
 
             // --- FASE 1: Chegada dos pacientes ---
@@ -146,20 +145,27 @@ public class Simulador {
     }
 
     private void processarChegadas() {
-        // Uso do Iterator para permitir remoção segura
-        Iterator<Paciente> it = pacientesNovos.iterator();
-        while (it.hasNext()) {
-            Paciente p = it.next();
+        // Lista temporária para armazenar pacientes que chegaram neste tick
+        List<Paciente> pacientesQueChegaram = new ArrayList<>();
+
+        // 1. Itera sobre a lista (sem modificar) para encontrar quem chegou
+        for (Paciente p : pacientesNovos) {
             if (p.getTempoChegada() <= tempoAtual) {
                 p.setStatus(StatusPaciente.PRONTO);
                 filaDeProntos.add(p);
-                it.remove(); // Remove da lista de 'novos'
+                pacientesQueChegaram.add(p); // Adiciona na lista temporária
 
                 // Se for SRTF, uma chegada pode causar preempção
                 /*if (config.getAlgoritmo() == AlgoritmoEscalonamento.SRTF) {
                     verificarPreempcaoSRTF(p);
                 }*/
             }
+        }
+
+        // 2. Remove todos os pacientes que chegaram da lista principal.
+        // Esta operação (removeAll) é thread-safe no CopyOnWriteArrayList.
+        if (!pacientesQueChegaram.isEmpty()) {
+            pacientesNovos.removeAll(pacientesQueChegaram);
         }
     }
 
