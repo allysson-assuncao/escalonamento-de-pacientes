@@ -66,16 +66,16 @@ public class TelaConfiguracao extends JFrame {
 
         add(painelSuperior, BorderLayout.NORTH);
 
-        // --- PAINEL CENTRAL (LISTA MANUAL) ---
+        // --- Painel Central (Lista manual) ---
         // Cria, inicializa e atribui ao campo
         this.painelListaManual = criarPainelListaManual();
         add(this.painelListaManual, BorderLayout.CENTER);
 
-        // --- PAINEL SUL (BOTÃO INICIAR) ---
+        // --- Painel Sul (Botão Iniciar) ---
         add(criarPainelSul(), BorderLayout.SOUTH);
 
-        // --- LISTENERS (AGORA SEGUROS) ---
-        // Adiciona listeners APÓS todos os componentes terem sido inicializados
+        // --- Listeners ---
+        // Adiciona listeners após todos os componentes terem sido inicializados
         radioAleatorio.addActionListener(this::atualizarEstadoInputs);
         radioPredefinido.addActionListener(this::atualizarEstadoInputs);
         radioManual.addActionListener(this::atualizarEstadoInputs);
@@ -128,9 +128,6 @@ public class TelaConfiguracao extends JFrame {
                 BorderFactory.createEmptyBorder(10, 10, 10, 10),
                 BorderFactory.createTitledBorder("Fonte dos Pacientes")
         ));
-
-        // Este painel NÃO deve ter a JList
-        // O erro do GridBagLayout foi removido
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);

@@ -30,8 +30,12 @@ public class GeradorPacientes {
         for (int i = 0; i < quantidade; i++) {
             int id = i + 1;
             int tempoChegada = rand.nextInt(quantidade * 2);
-            int tempoDuracao = rand.nextInt(1, 11); // Duração de 1 a 10
-            int prioridade = rand.nextInt(1, 11); // Prioridade de 1 a 10
+
+            // CORREÇÃO: rand.nextInt(1, 11)
+            // Isso gera um número de 1 (inclusivo) a 11 (exclusivo), ou seja, 1 a 10.
+            int tempoDuracao = rand.nextInt(1, 11);
+
+            int prioridade = rand.nextInt(-10, 11);
             lista.add(new Paciente(id, tempoChegada, tempoDuracao, prioridade));
         }
         return lista;

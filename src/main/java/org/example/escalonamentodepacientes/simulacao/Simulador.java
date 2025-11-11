@@ -150,7 +150,7 @@ public class Simulador {
         Iterator<Paciente> it = pacientesNovos.iterator();
         while (it.hasNext()) {
             Paciente p = it.next();
-            if (p.getTempoChegada() == tempoAtual) {
+            if (p.getTempoChegada() <= tempoAtual) {
                 p.setStatus(StatusPaciente.PRONTO);
                 filaDeProntos.add(p);
                 it.remove(); // Remove da lista de 'novos'
