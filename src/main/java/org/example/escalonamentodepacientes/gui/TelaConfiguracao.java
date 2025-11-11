@@ -3,10 +3,10 @@ package org.example.escalonamentodepacientes.gui;
 import org.example.escalonamentodepacientes.enums.AlgoritmoEscalonamento;
 import org.example.escalonamentodepacientes.model.ConfiguracaoSimulacao;
 import org.example.escalonamentodepacientes.model.Paciente;
+import org.example.escalonamentodepacientes.simulacao.GeradorPacientes;
 import org.example.escalonamentodepacientes.simulacao.Simulador;
 
 import javax.swing.*;
-// Importamos o GridBagLayout
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
@@ -16,7 +16,6 @@ import java.util.List;
  * Tela principal para configuração da simulação.
  * Coleta os dados de entrada e inicia o Simulador.
  */
-
 public class TelaConfiguracao extends JFrame {
 
     private JComboBox<AlgoritmoEscalonamento> comboAlgoritmo;
@@ -35,11 +34,11 @@ public class TelaConfiguracao extends JFrame {
     private JButton btnDescer;
     private JPanel painelListaManual;
     private int proximoIdPacienteManual = 1;
-    private ButtonGroup grupoPacientes; // Movido para ser acessível na classe
+    private ButtonGroup grupoPacientes;
 
     public TelaConfiguracao() {
         setTitle("Simulador de Hospital Digital - Configuração");
-        setSize(1000, 750); // Aumentei um pouco a altura para os cards
+        setSize(1000, 750);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
