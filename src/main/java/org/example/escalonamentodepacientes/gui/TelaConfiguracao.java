@@ -19,12 +19,13 @@ import java.util.List;
  */
 public class TelaConfiguracao extends JFrame {
 
-    // --- Componentes originais ---
+    // --- Componentes Config. Geral ---
     private JComboBox<AlgoritmoEscalonamento> comboAlgoritmo;
     private JSpinner spinnerMedicos;
     private JSpinner spinnerQuantum;
+    private JComboBox<CenarioSimulacao> comboCenario;
 
-    // --- Componentes da Fonte de Pacientes ---
+    // --- Componentes Fonte de Pacientes ---
     private JPanel painelFontePacientes;
     private JRadioButton radioAleatorio;
     private JRadioButton radioPredefinido;
@@ -33,7 +34,7 @@ public class TelaConfiguracao extends JFrame {
     private JComboBox<String> comboCargaPacientes;
     private ButtonGroup grupoPacientes;
 
-    // --- Componentes da Lista Manual ---
+    // --- Componentes Lista Manual ---
     private JPanel painelListaManual;
     private DefaultListModel<Paciente> modeloListaPacientes;
     private JList<Paciente> listaManualPacientes;
@@ -43,9 +44,6 @@ public class TelaConfiguracao extends JFrame {
     private JButton btnDescer;
     private int proximoIdPacienteManual = 1;
 
-    // --- Componentes dos Cenários de Simulação ---
-    private JComboBox<CenarioSimulacao> comboCenario;
-
     public TelaConfiguracao() {
         setTitle("Simulador de Hospital Digital - Configuração");
         setSize(1000, 750);
@@ -54,66 +52,36 @@ public class TelaConfiguracao extends JFrame {
         setLayout(new BorderLayout(10, 10));
 
 
-        // 1. Criamos um painel superior que vai conter os nossos "Cards"
-        // Usamos um BoxLayout para empilhar os cards verticalmente
+        // --- Pianel Superior (Cards de Configs) ---
         JPanel painelSuperior = new JPanel();
         painelSuperior.setLayout(new BoxLayout(painelSuperior, BoxLayout.Y_AXIS));
 
-        // 2. Criamos e adicionamos o primeiro card (Configurações)
+        // Card 1: Configurações Gerais (Cria e inicializa os componentes)
         painelSuperior.add(criarPainelGeral());
-
-        // Adiciona um "espaçador" vertical entre os cards
         painelSuperior.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // 3. Criamos e adicionamos o segundo card (Fonte dos Pacientes)
-        painelSuperior.add(criarPainelListaManual());
+        // Card 2: Fonte dos Pacientes (Cria, inicializa e atribui ao campo)
+        this.painelFontePacientes = criarPainelFontePacientes();
+        painelSuperior.add(this.painelFontePacientes);
 
-        // 4. Adicionamos o painel superior (com os cards)
         add(painelSuperior, BorderLayout.NORTH);
 
+        // --- PAINEL CENTRAL (LISTA MANUAL) ---
+        // Cria, inicializa e atribui ao campo
+        this.painelListaManual = criarPainelListaManual();
+        add(this.painelListaManual, BorderLayout.CENTER);
 
-        // --- Painel de Gerenciamento da Lista Manual
-        painelListaManual = new JPanel(new BorderLayout(5, 5));
-        painelListaManual.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(0, 10, 0, 10),
-                BorderFactory.createTitledBorder("Pacientes Adicionados Manualmente")
-        ));
-
-        modeloListaPacientes = new DefaultListModel<>();
-        listaManualPacientes = new JList<>(modeloListaPacientes);
-        listaManualPacientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        painelListaManual.add(new JScrollPane(listaManualPacientes), BorderLayout.CENTER);
-
-        JPanel painelBotoesLista = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        btnAddPaciente = new JButton("Adicionar");
-        btnRemovePaciente = new JButton("Remover");
-        btnSubir = new JButton("Subir");
-        btnDescer = new JButton("Descer");
-
-        btnAddPaciente.addActionListener(this::addPaciente);
-        btnRemovePaciente.addActionListener(this::removePaciente);
-        btnSubir.addActionListener(this::subirPaciente);
-        btnDescer.addActionListener(this::descerPaciente);
-
-        painelBotoesLista.add(btnAddPaciente);
-        painelBotoesLista.add(btnRemovePaciente);
-        painelBotoesLista.add(btnSubir);
-        painelBotoesLista.add(btnDescer);
-
-        painelListaManual.add(painelBotoesLista, BorderLayout.SOUTH);
-        add(painelListaManual, BorderLayout.CENTER);
-
-        // Painel Iniciar (Sul)
+        // --- PAINEL SUL (BOTÃO INICIAR) ---
         add(criarPainelSul(), BorderLayout.SOUTH);
 
-        // Listeners dos RadioButtons
+        // --- LISTENERS (AGORA SEGUROS) ---
+        // Adiciona listeners APÓS todos os componentes terem sido inicializados
         radioAleatorio.addActionListener(this::atualizarEstadoInputs);
         radioPredefinido.addActionListener(this::atualizarEstadoInputs);
         radioManual.addActionListener(this::atualizarEstadoInputs);
-
-        // --- Listener para o ComboBox de Cenários ---
         comboCenario.addActionListener(this::atualizarEstadoInputs);
 
+        // Define o estado inicial da UI
         atualizarEstadoInputs(null);
     }
 
@@ -152,37 +120,34 @@ public class TelaConfiguracao extends JFrame {
     }
 
     /**
-     * Cria o Card "Fonte dos Pacientes" usando um GridBagLayout
+     * Cria o Card "Fonte dos Pacientes" (O antigo criarPainelListaManual)
      */
-    private JPanel criarPainelListaManual() {
+    private JPanel criarPainelFontePacientes() {
         JPanel painel = new JPanel(new GridBagLayout());
         painel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(10, 10, 10, 10), // Margem externa
-                BorderFactory.createTitledBorder("Fonte dos Pacientes") // Borda com título
+                BorderFactory.createEmptyBorder(10, 10, 10, 10),
+                BorderFactory.createTitledBorder("Fonte dos Pacientes")
         ));
 
-        modeloListaPacientes = new DefaultListModel<>();
-        listaManualPacientes = new JList<>(modeloListaPacientes);
-        listaManualPacientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        painel.add(new JScrollPane(listaManualPacientes), BorderLayout.CENTER);
+        // Este painel NÃO deve ter a JList
+        // O erro do GridBagLayout foi removido
 
-        // GridBagConstraints é o
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Espaçamento entre componentes
-        gbc.anchor = GridBagConstraints.WEST; // Alinhar à esquerda
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.anchor = GridBagConstraints.WEST;
 
         // Inicializa os componentes
         grupoPacientes = new ButtonGroup();
 
-        radioAleatorio = new JRadioButton("Pacientes Aleatórios:", true);
-        spinnerQtdPacientesAleatorios = new JSpinner(new SpinnerNumberModel(10, 1, 100, 1));
+        radioAleatorio = new JRadioButton("Pacientes Aleatórios:", true); // Inicializa
+        spinnerQtdPacientesAleatorios = new JSpinner(new SpinnerNumberModel(10, 1, 100, 1)); // Inicializa
         grupoPacientes.add(radioAleatorio);
 
-        radioPredefinido = new JRadioButton("Carga Pré-definida:");
-        comboCargaPacientes = new JComboBox<>(new String[]{"CenarioSlides", "CenarioSJF", "CenarioPrioridade", "CenarioSRTF"});
+        radioPredefinido = new JRadioButton("Carga Pré-definida:"); // Inicializa
+        comboCargaPacientes = new JComboBox<>(new String[]{"CenarioSlides", "CenarioSJF", "CenarioPrioridade", "CenarioSRTF"}); // Inicializa
         grupoPacientes.add(radioPredefinido);
 
-        radioManual = new JRadioButton("Adicionar Manualmente:");
+        radioManual = new JRadioButton("Adicionar Manualmente:"); // Inicializa
         grupoPacientes.add(radioManual);
 
         // --- Adicionando os componentes ao painel com o GridBagLayout ---
@@ -191,19 +156,17 @@ public class TelaConfiguracao extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         painel.add(radioAleatorio, gbc);
-
         gbc.gridx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Faz o spinner preencher o espaço
-        gbc.weightx = 1.0; // Permite que a coluna 1 estique
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
         painel.add(spinnerQtdPacientesAleatorios, gbc);
 
         // Linha 1: Pré-definido
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.NONE; // Reseta o fill
-        gbc.weightx = 0; // Reseta o weight
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
         painel.add(radioPredefinido, gbc);
-
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
@@ -216,6 +179,41 @@ public class TelaConfiguracao extends JFrame {
         gbc.weightx = 0;
         painel.add(radioManual, gbc);
 
+        return painel;
+    }
+
+    /**
+     * Cria o Card "Fonte dos Pacientes" usando um GridBagLayout
+     */
+    private JPanel criarPainelListaManual() {
+        JPanel painel = new JPanel(new BorderLayout(5, 5));
+        painel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(0, 10, 0, 10),
+                BorderFactory.createTitledBorder("Pacientes Adicionados Manualmente")
+        ));
+
+        modeloListaPacientes = new DefaultListModel<>();
+        listaManualPacientes = new JList<>(modeloListaPacientes);
+        listaManualPacientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        painel.add(new JScrollPane(listaManualPacientes), BorderLayout.CENTER);
+
+        JPanel painelBotoesLista = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        btnAddPaciente = new JButton("Adicionar");
+        btnRemovePaciente = new JButton("Remover");
+        btnSubir = new JButton("Subir");
+        btnDescer = new JButton("Descer");
+
+        btnAddPaciente.addActionListener(this::addPaciente);
+        btnRemovePaciente.addActionListener(this::removePaciente);
+        btnSubir.addActionListener(this::subirPaciente);
+        btnDescer.addActionListener(this::descerPaciente);
+
+        painelBotoesLista.add(btnAddPaciente);
+        painelBotoesLista.add(btnRemovePaciente);
+        painelBotoesLista.add(btnSubir);
+        painelBotoesLista.add(btnDescer);
+
+        painel.add(painelBotoesLista, BorderLayout.SOUTH);
         return painel;
     }
 
@@ -234,7 +232,7 @@ public class TelaConfiguracao extends JFrame {
     }
 
     /**
-     * Habilita e desabilita os campos de entrada (Lógica permanece igual)
+     * Habilita e desabilita os campos de entrada
      */
     private void atualizarEstadoInputs(ActionEvent e) {
         CenarioSimulacao cenarioSelecionado = (CenarioSimulacao) comboCenario.getSelectedItem();
@@ -252,13 +250,10 @@ public class TelaConfiguracao extends JFrame {
         for (Component c : painelFontePacientes.getComponents()) {
             c.setEnabled(customizado);
         }
-        // ... e seus sub-componentes (radios, spinners)
         radioAleatorio.setEnabled(customizado);
         radioPredefinido.setEnabled(customizado);
         radioManual.setEnabled(customizado);
 
-        // Habilita os spinners/combos internos *somente se*
-        // o modo customizado E o radio específico estiverem selecionados
         boolean aleatorio = customizado && radioAleatorio.isSelected();
         boolean predefinido = customizado && radioPredefinido.isSelected();
         boolean manual = customizado && radioManual.isSelected();

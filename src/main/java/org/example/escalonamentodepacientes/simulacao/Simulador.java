@@ -159,10 +159,6 @@ public class Simulador {
                 /*if (config.getAlgoritmo() == AlgoritmoEscalonamento.SRTF) {
                     verificarPreempcaoSRTF(p);
                 }*/
-            } else if (p.getTempoChegada() > tempoAtual) {
-                // Como a lista está ordenada, podemos parar de procurar
-                // Será que causa problema para os adicionados posteriormente?
-                break;
             }
         }
     }
