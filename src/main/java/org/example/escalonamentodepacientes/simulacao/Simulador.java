@@ -244,12 +244,18 @@ public class Simulador {
             somaTemposExecucao += p.getTempoExecucaoTotal();
         }
 
-        int totalPacientes = pacientesConcluidos.size();
+        int totalPacientes = Math.max(pacientesConcluidos.size(), 1); // evita divisão por 0
+
         double tempoMedioEspera = somaTemposEspera / totalPacientes;
         double tempoMedioExecucao = somaTemposExecucao / totalPacientes;
 
-        // TODO: Efetivar esse cálculo
-        double utilizacaoMediaCPU = 0;
+        double somaTempoOcupadoMedicos = medicos.stream()
+                .mapToDouble(Medico::getTempoOcupado)
+                .sum();
+
+        double tempoTotalSimulacao = Math.max(this.tempoAtual, 1);
+
+        double utilizacaoMediaCPU = (somaTempoOcupadoMedicos / (tempoTotalSimulacao * medicos.size())) * 100.0;
 
         // Formata os resultados
         String resultados = String.format(
