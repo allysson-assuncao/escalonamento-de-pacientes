@@ -151,10 +151,11 @@ public class GeradorPacientes {
             }
             case "CenarioSRTF" -> {
                 // Ideal para ver preempção
-                lista.add(new Paciente(1, 0, 10, 2));
-                lista.add(new Paciente(2, 2, 2, 1));
-                lista.add(new Paciente(1, 4, 6, 2));
-                lista.add(new Paciente(2, 5, 3, 1));
+                lista.add(new Paciente(1, 0, 5, 2));
+                lista.add(new Paciente(2, 0, 2, 3));
+                lista.add(new Paciente(3, 1, 4, 1));
+                lista.add(new Paciente(4, 3, 1, 4));
+                lista.add(new Paciente(5, 5, 2, 5));
             }
             case null, default -> {
                 // Usando os mesmos dados dos exemplos dos slides da aula 07

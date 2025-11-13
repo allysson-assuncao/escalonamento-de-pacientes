@@ -156,9 +156,9 @@ public class Simulador {
                 pacientesQueChegaram.add(p); // Adiciona na lista temporária
 
                 // Se for SRTF, uma chegada pode causar preempção
-                /*if (config.getAlgoritmo() == AlgoritmoEscalonamento.SRTF) {
+                 if (config.getAlgoritmo() == AlgoritmoEscalonamento.SRTF) {
                     verificarPreempcaoSRTF(p);
-                }*/
+                }
             }
         }
 
@@ -172,7 +172,13 @@ public class Simulador {
     // TODO: Implementar e efetivar o funcionamento desse método
     private void verificarPreempcaoSRTF(Paciente pacienteNovo) {
         // Tenta encontrar um médico que esteja atendendo um paciente com duração maior do que o recem chegado
-        // Deve realizar a substituição em caso verdadeiro
+        for(Medico medico : medicos) {
+            if(!medico.estaOcioso() && pacienteNovo.getTempoRestante() < medico.getPacienteAtual().getTempoRestante()){
+                filaDeProntos.add(medico.getPacienteAtual()); //Salva paciente atual na lista de prontos
+                //Medico não está ocioso e paciente novo tem menor tempo de execução
+                medico.atenderPaciente(pacienteNovo);
+            }
+        }
     }
 
     private void processarAtendimentos() {
@@ -190,7 +196,6 @@ public class Simulador {
                 paciente.finalizarTurnaround(tempoAtual);
                 pacientesConcluidos.add(paciente);
                 medico.liberarMedico();
-
                 // 2. Se não terminou, verifica preempção por Quantum (RR)
             } else if (config.getAlgoritmo() == AlgoritmoEscalonamento.ROUND_ROBIN) {
                 int quantumDefinido = config.getQuantum();
@@ -211,6 +216,7 @@ public class Simulador {
             }
         }
     }
+
 
     private void atribuirTrabalhoOcioso() {
         for (Medico medico : medicos) {
