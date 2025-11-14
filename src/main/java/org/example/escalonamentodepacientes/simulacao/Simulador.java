@@ -109,11 +109,11 @@ public class Simulador {
                 || !pacientesNovos.isEmpty()) {
             System.out.println("Executando fluxo principal, tempo: " + this.tempoAtual);
 
-            // --- FASE 1: Chegada dos pacientes ---
-            processarChegadas();
-
-            // --- FASE 2: Processamento e tratamentos específicos (Médicos trabalham) ---
+            // --- FASE 1: Processamento e tratamentos específicos (Médicos trabalham) ---
             processarAtendimentos();
+
+            // --- FASE 2: Chegada dos pacientes ---
+            processarChegadas();
 
             // --- FASE 3: Escalonamento principal (Atribuição das consultas) ---
             atribuirTrabalhoOcioso();
@@ -169,14 +169,31 @@ public class Simulador {
         }
     }
 
-    // TODO: Implementar e efetivar o funcionamento desse método
     private void verificarPreempcaoSRTF(Paciente pacienteNovo) {
         // Tenta encontrar um médico que esteja atendendo um paciente com duração maior do que o recem chegado
-        for(Medico medico : medicos) {
-            if(!medico.estaOcioso() && pacienteNovo.getTempoRestante() < medico.getPacienteAtual().getTempoRestante()){
-                filaDeProntos.add(medico.getPacienteAtual()); //Salva paciente atual na lista de prontos
-                //Medico não está ocioso e paciente novo tem menor tempo de execução
+        for (Medico medico : medicos) {
+            if (!medico.estaOcioso() && pacienteNovo.getTempoRestante() < medico.getPacienteAtual().getTempoRestante()) {
+                System.out.println("[T=" + tempoAtual + "] Preempção SRTF: " + pacienteNovo + " (TR=" + pacienteNovo.getTempoRestante() +
+                        ") está preemptando " + medico.getPacienteAtual() + " (TR=" + medico.getPacienteAtual().getTempoRestante() + ")");
+
+                // 1. Libera o paciente antigo (que estava sendo executado pelo médico)
+                Paciente pacienteAntigo = medico.liberarMedico();
+
+                // 2. Coloca o paciente antigo de volta na fila de prontos
+                pacienteAntigo.setStatus(StatusPaciente.PRONTO);
+                filaDeProntos.add(pacienteAntigo);
+
+                // 3. Remove o paciente novo da fila de prontos
+                filaDeProntos.remove(pacienteNovo);
+
+                // 4. Atribui o paciente novo ao médico
                 medico.atenderPaciente(pacienteNovo);
+
+                // 5. Contabiliza a troca de contexto
+                totalTrocasContexto++;
+
+                // 6. Para o loop, para evitar que o paciente interrompa o atendimento de outro médico
+                break;
             }
         }
     }
@@ -186,6 +203,9 @@ public class Simulador {
             if (medico.estaOcioso()) {
                 continue; // Próximo médico
             }
+
+            System.out.println("[T=" + tempoAtual + "] ATENDIMENTO: " + medico.getPacienteAtual() +
+                           " (TR antes=" + medico.getPacienteAtual().getTempoRestante() + ")");
 
             // Médico trabalha (RR: incrementa o contador interno de quantum)
             medico.executaTickConsulta();
