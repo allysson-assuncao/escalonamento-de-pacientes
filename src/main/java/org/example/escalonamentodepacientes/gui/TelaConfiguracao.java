@@ -113,7 +113,7 @@ public class TelaConfiguracao extends JFrame {
 
         // 4. Quantum (para RR)
         painel.add(new JLabel("Quantum (para Round-Robin):"));
-        spinnerQuantum = new JSpinner(new SpinnerNumberModel(3, 1, 10, 1));
+        spinnerQuantum = new JSpinner(new SpinnerNumberModel(2, 1, 10, 1));
         painel.add(spinnerQuantum);
 
         return painel;
