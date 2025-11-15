@@ -52,7 +52,7 @@ public class TelaSimulacao extends JFrame implements IAtualizadorVisual {
 
         // --- Painel Leste (Info + Resultados) ---
         JPanel painelLeste = new JPanel(new BorderLayout(5, 5));
-        painelLeste.setPreferredSize(new Dimension(350, 0));
+        painelLeste.setPreferredSize(new Dimension(500, 0));
         painelLeste.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
         JPanel painelInfo = new JPanel();

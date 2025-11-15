@@ -65,7 +65,7 @@ public class GeradorPacientes {
     }
 
     // "Muitos, chegando continuamente, com tempos de atendimento variados."
-    private static List<Paciente> getCenario2PlantaoLotado() {
+    /*private static List<Paciente> getCenario2PlantaoLotado() {
         List<Paciente> lista = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
             int id = i + 1;
@@ -75,10 +75,21 @@ public class GeradorPacientes {
             lista.add(new Paciente(id, tempoChegada, tempoDuracao, prioridade));
         }
         return lista;
+    }*/
+
+    // "5 pacientes, chegando continuamente, com tempos de atendimento variados e prioridades médias."
+    private static List<Paciente> getCenario2PlantaoLotado() {
+        List<Paciente> lista = new ArrayList<>();
+        lista.add(new Paciente(1, 0, 7, 3));
+        lista.add(new Paciente(2, 2, 4, 5));
+        lista.add(new Paciente(3, 3, 8, 7));
+        lista.add(new Paciente(4, 5, 3, 6));
+        lista.add(new Paciente(5, 6, 5, 4));
+        return lista;
     }
 
     // "Chegando de forma aleatória, com diferentes Burst Times e Prioridades."
-    private static List<Paciente> getCenario3HospitalModerno() {
+    /*private static List<Paciente> getCenario3HospitalModerno() {
         List<Paciente> lista = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             int id = i + 1;
@@ -87,6 +98,17 @@ public class GeradorPacientes {
             int prioridade = rand.nextInt(1, 11); // Prioridades diferentes (range total)
             lista.add(new Paciente(id, tempoChegada, tempoDuracao, prioridade));
         }
+        return lista;
+    }*/
+
+    // "5 pacientes, chegando de forma aleatória, com diferentes Burst Times e Prioridades."
+    private static List<Paciente> getCenario3HospitalModerno() {
+        List<Paciente> lista = new ArrayList<>();
+        lista.add(new Paciente(1, 0, 3, 8));
+        lista.add(new Paciente(2, 5, 10, 1));
+        lista.add(new Paciente(3, 7, 2, 5));
+        lista.add(new Paciente(4, 8, 6, 3));
+        lista.add(new Paciente(5, 12, 4, 2));
         return lista;
     }
 
