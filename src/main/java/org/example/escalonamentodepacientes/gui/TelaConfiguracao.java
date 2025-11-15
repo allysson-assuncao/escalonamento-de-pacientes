@@ -374,7 +374,7 @@ public class TelaConfiguracao extends JFrame {
         ConfiguracaoSimulacao config = new ConfiguracaoSimulacao(algoritmo, numMedicos, pacientes, quantum);
 
         // 3. Passa o CENÁRIO para a TelaSimulacao
-        TelaSimulacao telaSimulacao = new TelaSimulacao(numMedicos, cenario);
+        TelaSimulacao telaSimulacao = new TelaSimulacao(numMedicos, cenario, algoritmo);
 
         // 4. Passa o CENÁRIO para o Simulador
         Simulador simulador = new Simulador(config, telaSimulacao, cenario);

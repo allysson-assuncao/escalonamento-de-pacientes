@@ -1,6 +1,7 @@
 package org.example.escalonamentodepacientes.gui;
 
 import lombok.Setter;
+import org.example.escalonamentodepacientes.enums.AlgoritmoEscalonamento;
 import org.example.escalonamentodepacientes.enums.CenarioSimulacao;
 import org.example.escalonamentodepacientes.escalonadores.IAtualizadorVisual;
 import org.example.escalonamentodepacientes.model.Medico;
@@ -29,13 +30,15 @@ public class TelaSimulacao extends JFrame implements IAtualizadorVisual {
     private PainelGantt finalPainelGantt;
 
     private final CenarioSimulacao cenario;
+    private final AlgoritmoEscalonamento algoritmo;
     private Simulador simulador;
 
-    public TelaSimulacao(int numeroMedicos, CenarioSimulacao cenario) {
+    public TelaSimulacao(int numeroMedicos, CenarioSimulacao cenario, AlgoritmoEscalonamento algoritmo) {
         this.cenario = cenario;
+        this.algoritmo = algoritmo;
 
         setTitle("Simulação em Andamento");
-        setSize(1200, 800);
+        setSize(1800, 1200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
@@ -62,6 +65,18 @@ public class TelaSimulacao extends JFrame implements IAtualizadorVisual {
         painelTempo.setBorder(BorderFactory.createTitledBorder("Status Atual"));
         painelTempo.add(labelTempoAtual);
         painelInfo.add(painelTempo);
+
+        JPanel painelContexto = new JPanel(new GridLayout(5, 1, 0, 5));
+        painelContexto.setBorder(BorderFactory.createTitledBorder("Contexto da Simulação"));
+
+        // Pega o nome amigável do Enum
+        JLabel labelCenario = new JLabel("Cenário: " + this.cenario.getNome());
+        JLabel labelAlgoritmo = new JLabel("Algoritmo: " + this.algoritmo.toString());
+
+        painelContexto.add(labelCenario);
+        painelContexto.add(labelAlgoritmo);
+        painelInfo.add(painelContexto);
+
         painelInfo.add(Box.createRigidArea(new Dimension(0, 5)));
 
         JPanel painelMedicos = new JPanel(new GridLayout(numeroMedicos, 1, 5, 5));

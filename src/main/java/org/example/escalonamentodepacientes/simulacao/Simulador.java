@@ -132,7 +132,7 @@ public class Simulador {
 
             // Pequeno delay para permitir a visualização
             try {
-                Thread.sleep(1000); // 1s por "tick" do relógio global
+                Thread.sleep(100); // 1s por "tick" do relógio global
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
