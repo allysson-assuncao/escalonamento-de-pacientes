@@ -231,7 +231,7 @@ public class Simulador {
                     pacientePreemptado.setStatus(StatusPaciente.PRONTO);
                     filaDeProntos.add(pacientePreemptado);
 
-                    totalTrocasContexto++;
+                    /*totalTrocasContexto++;*/
                 }
             }
         }
