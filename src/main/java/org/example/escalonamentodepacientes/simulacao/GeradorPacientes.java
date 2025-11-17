@@ -30,9 +30,6 @@ public class GeradorPacientes {
         for (int i = 0; i < quantidade; i++) {
             int id = i + 1;
             int tempoChegada = rand.nextInt(quantidade * 2);
-
-            // CORREÇÃO: rand.nextInt(1, 11)
-            // Isso gera um número de 1 (inclusivo) a 11 (exclusivo), ou seja, 1 a 10.
             int tempoDuracao = rand.nextInt(1, 11);
 
             int prioridade = rand.nextInt(-10, 11);
@@ -56,11 +53,11 @@ public class GeradorPacientes {
     // "Poucos, mas com níveis de urgência (Prioridade) muito diferentes."
     private static List<Paciente> getCenario1Emergencia() {
         List<Paciente> lista = new ArrayList<>();
-        lista.add(new Paciente(1, 0, 8, 1)); // Crítico, chega primeiro
-        lista.add(new Paciente(2, 1, 3, 5)); // Baixa prioridade
-        lista.add(new Paciente(3, 2, 4, 2)); // Prioridade média
-        lista.add(new Paciente(4, 3, 5, 1)); // Crítico, chega depois
-        lista.add(new Paciente(5, 5, 2, 10)); // Prioridade muito baixa
+        lista.add(new Paciente(1, 0, 8, 1));
+        lista.add(new Paciente(2, 1, 3, 5));
+        lista.add(new Paciente(3, 2, 4, 2));
+        lista.add(new Paciente(4, 3, 5, 1));
+        lista.add(new Paciente(5, 5, 2, 10));
         return lista;
     }
 
