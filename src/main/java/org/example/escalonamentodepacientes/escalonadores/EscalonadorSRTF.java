@@ -7,7 +7,7 @@ import java.util.Queue;
 public class EscalonadorSRTF implements IEscalonador {
 
     @Override
-    public Paciente selecionarProximo(Queue<Paciente> filaDeProntos, int tempoAtual) {
+    public Paciente selecionarProximo(Queue<Paciente> filaDeProntos) {
 
         // Verifica a a fila esta vaziia.
         if (filaDeProntos.isEmpty()) {

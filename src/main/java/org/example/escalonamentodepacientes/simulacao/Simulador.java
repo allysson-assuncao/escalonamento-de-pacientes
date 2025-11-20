@@ -242,7 +242,7 @@ public class Simulador {
         for (Medico medico : medicos) {
             if (medico.estaOcioso() && !filaDeProntos.isEmpty()) {
                 // Pede ao escalonador o próximo paciente
-                Paciente proximo = escalonador.selecionarProximo(filaDeProntos, tempoAtual);
+                Paciente proximo = escalonador.selecionarProximo(filaDeProntos);
 
                 if (proximo != null) {
                     // Remove da fila e atribui ao médico

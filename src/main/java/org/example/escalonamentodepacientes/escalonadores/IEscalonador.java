@@ -13,8 +13,7 @@ public interface IEscalonador {
      * Decide qual é o próximo paciente a ser executado da fila de prontos.
      *
      * @param filaDeProntos A fila de pacientes no estado PRONTO.
-     * @param tempoAtual O "tick" atual do relógio global.
      * @return O paciente selecionado.
      */
-    Paciente selecionarProximo(Queue<Paciente> filaDeProntos, int tempoAtual);
+    Paciente selecionarProximo(Queue<Paciente> filaDeProntos);
 }

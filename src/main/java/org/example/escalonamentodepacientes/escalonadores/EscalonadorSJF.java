@@ -9,7 +9,7 @@ import java.util.Queue;
  */
 public class EscalonadorSJF implements IEscalonador {
     @Override
-    public Paciente selecionarProximo(Queue<Paciente> filaDeProntos, int tempoAtual) {
+    public Paciente selecionarProximo(Queue<Paciente> filaDeProntos) {
         // Se a fila está vazia, não há ninguém para escolher.
         if (filaDeProntos.isEmpty()) {
             return null; // Lista vazia

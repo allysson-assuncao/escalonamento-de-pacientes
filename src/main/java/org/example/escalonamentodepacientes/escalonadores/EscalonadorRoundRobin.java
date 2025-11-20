@@ -14,7 +14,7 @@ import java.util.Queue;
 public class EscalonadorRoundRobin implements IEscalonador {
 
     @Override
-    public Paciente selecionarProximo(Queue<Paciente> filaDeProntos, int tempoAtual) {
+    public Paciente selecionarProximo(Queue<Paciente> filaDeProntos) {
         // Pega o primeiro paciente da lista sem remover, a remoção é feita no Simulador
         return filaDeProntos.peek();
     }

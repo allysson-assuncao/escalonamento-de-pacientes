@@ -13,7 +13,7 @@ import java.util.*;
 public class EscalonadorPrioridade implements IEscalonador {
 
     @Override
-    public Paciente selecionarProximo(Queue<Paciente> filaDeProntos, int tempoAtual) {
+    public Paciente selecionarProximo(Queue<Paciente> filaDeProntos) {
         Paciente paciente = null;
 
         for (Paciente p : filaDeProntos) {
